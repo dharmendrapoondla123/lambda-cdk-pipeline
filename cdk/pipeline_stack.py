@@ -37,8 +37,9 @@ class PipelineStack(Stack):
         # GitHub Source Action: update owner/repo and use Secret in SecretsManager named "github-token"
         source_action = cpactions.GitHubSourceAction(
             action_name="GitHub_Source",
+            connection_arn="arn:aws:codeconnections:ap-south-1:347156581188:connection/3712b2a1-b005-4a2f-9ff2-5db33267c2af",
             owner="your-github-username-or-org",
-            repo="your-repo-name",
+            repo="lambda-cdk-pipeline",
             branch="main",
             oauth_token=SecretValue.secrets_manager("github-token"),
             output=source_output,

@@ -9,9 +9,9 @@ class LambdaStack(Stack):
         super().__init__(scope, id, **kwargs)
 
         self.lambda_fn = _lambda.Function(
-            self, "SampleFunction",
+            self, "sample-cdk-lambda",
             runtime=_lambda.Runtime.PYTHON_3_9,
             handler="handler.handler",
-            code=_lambda.Code.from_asset("lambda_function"),
+            code=_lambda.Code.from_asset("lambda_functions"),
             function_name="sample-cdk-lambda"
         )
