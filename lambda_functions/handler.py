@@ -1,5 +1,5 @@
 def handler(event, context):
     return {
         "statusCode": 200,
-        "body": "Hello  from CDK-deployed Lambda!  "
+        "body": "Hello testing from CDK-deployed Lambda!"
     }
