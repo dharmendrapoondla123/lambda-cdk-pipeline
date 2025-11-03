@@ -35,16 +35,25 @@ class PipelineStack(Stack):
         )
 
         # GitHub Source Action: update owner/repo and use Secret in SecretsManager named "github-token"
-        source_action = cpactions.GitHubSourceAction(
-            action_name="GitHub_Source",
-            connection_arn="arn:aws:codeconnections:ap-south-1:347156581188:connection/3712b2a1-b005-4a2f-9ff2-5db33267c2af",
-            owner="your-github-username-or-org",
-            repo="lambda-cdk-pipeline",
-            branch="main",
-            oauth_token=SecretValue.secrets_manager("github-token"),
-            output=source_output,
-            trigger=cpactions.GitHubTrigger.WEBHOOK
+        # source_action = cpactions.GitHubSourceAction(
+        #     action_name="GitHub_Source",
+        #     owner="your-github-username-or-org",
+        #     repo="lambda-cdk-pipeline",
+        #     branch="main",
+        #     oauth_token=SecretValue.secrets_manager("github-token"),
+        #     output=source_output,
+        #     trigger=cpactions.GitHubTrigger.WEBHOOK
+        # )
+
+        source_action = cpactions.CodeStarConnectionsSourceAction(
+        action_name="GitHub_Source",
+        owner="dharmendrapoondla123",
+        repo="lambda-cdk-pipline",
+        branch="main",
+                connection_arn="arn:aws:codeconnections:ap-south-1:347156581188:connection/3712b2a1-b005-4a2f-9ff2-5db33267c2af",
+        output=source_output
         )
+
 
         pipeline.add_stage(stage_name="Source", actions=[source_action])
 
