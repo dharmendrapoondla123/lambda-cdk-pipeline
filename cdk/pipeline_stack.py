@@ -35,24 +35,27 @@ class PipelineStack(Stack):
         )
 
         # GitHub Source Action: update owner/repo and use Secret in SecretsManager named "github-token"
-        source_action = cpactions.GitHubSourceAction(
-            action_name="GitHub_Source",
-            owner="dharmendrapoondla123",
-            repo="dharmendrapoondla123/lambda-cdk-pipeline",
-            branch="main",
-            oauth_token=SecretValue.secrets_manager("github-token"),
-            output=source_output,
-            trigger=cpactions.GitHubTrigger.WEBHOOK
+        # source_action = cpactions.GitHubSourceAction(
+        #     action_name="GitHub_Source",
+        #     owner="dharmendrapoondla123",
+        #     repo="dharmendrapoondla123/lambda-cdk-pipeline",
+        #     branch="main",
+        #     #oauth_token=SecretValue.secrets_manager("github-token"),
+        #     connection_arn="arn:aws:codeconnections:ap-south-1:347156581188:connection/3712b2a1-b005-4a2f-9ff2-5db33267c2af",
+        #     output=source_output,
+        #     trigger=cpactions.GitHubTrigger.WEBHOOK
+        # )
+
+        source_action = cpactions.CodeStarConnectionsSourceAction(
+        action_name="GitHub_Source",
+        owner="dharmendrapoondla123",
+        repo="lambda-cdk-pipeline",  # ✅ Correct repo name only
+        branch="main",
+        connection_arn="arn:aws:codeconnections:ap-south-1:347156581188:connection/3712b2a1-b005-4a2f-9ff2-5db33267c2af",
+        output=source_output,
+        trigger=cpactions.CodeStarConnectionsSourceActionTrigger.WEBHOOK  # ✅ optional but useful
         )
 
-        # source_action = cpactions.CodeStarConnectionsSourceAction(
-        # action_name="GitHub_Source",
-        # owner="dharmendrapoondla123",
-        # repo="lambda-cdk-pipline",
-        # branch="main",
-        #         connection_arn="arn:aws:codeconnections:ap-south-1:347156581188:connection/3712b2a1-b005-4a2f-9ff2-5db33267c2af",
-        # output=source_output
-        # )
 
 
         pipeline.add_stage(stage_name="Source", actions=[source_action])

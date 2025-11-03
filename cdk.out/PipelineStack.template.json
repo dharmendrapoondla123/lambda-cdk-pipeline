@@ -340,7 +340,7 @@
         },
         "Configuration": {
          "Owner": "dharmendrapoondla123",
-         "Repo": "lambda-cdk-pipeline",
+         "Repo": "dharmendrapoondla123/lambda-cdk-pipeline",
          "Branch": "main",
          "OAuthToken": "{{resolve:secretsmanager:github-token:SecretString:::}}",
          "PollForSourceChanges": false

@@ -90,7 +90,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/935f4b008ae154081ee2cedcb632b01b168ed50e92f5da372381798657e414ce.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/cfc17a203e4a9f016327559c7807f607cdbbccf972367a54e5388ef9bb410d08.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -135,15 +135,15 @@
             "type": "aws:cdk:warning",
             "data": "V1 pipeline type is implicitly selected when `pipelineType` is not set. If you want to use V2 type, set `PipelineType.V2`. [ack: @aws-cdk/aws-codepipeline:unspecifiedPipelineType]",
             "trace": [
-              "Annotations.addMessage (C:\\Users\\bhunu\\AppData\\Local\\Temp\\jsii-kernel-zCnvNk\\node_modules\\aws-cdk-lib\\core\\lib\\annotations.js:1:2066)",
-              "Annotations.addWarningV2 (C:\\Users\\bhunu\\AppData\\Local\\Temp\\jsii-kernel-zCnvNk\\node_modules\\aws-cdk-lib\\core\\lib\\annotations.js:1:984)",
-              "new Pipeline2 (C:\\Users\\bhunu\\AppData\\Local\\Temp\\jsii-kernel-zCnvNk\\node_modules\\aws-cdk-lib\\aws-codepipeline\\lib\\pipeline.js:1:11800)",
-              "new Pipeline2 (C:\\Users\\bhunu\\AppData\\Local\\Temp\\jsii-kernel-zCnvNk\\node_modules\\aws-cdk-lib\\core\\lib\\prop-injectable.js:1:681)",
-              "Kernel._Kernel_create (C:\\Users\\bhunu\\AppData\\Local\\Temp\\tmpj4ag2_a9\\lib\\program.js:549:25)",
-              "Kernel.create (C:\\Users\\bhunu\\AppData\\Local\\Temp\\tmpj4ag2_a9\\lib\\program.js:219:93)",
-              "KernelHost.processRequest (C:\\Users\\bhunu\\AppData\\Local\\Temp\\tmpj4ag2_a9\\lib\\program.js:15482:36)",
-              "KernelHost.run (C:\\Users\\bhunu\\AppData\\Local\\Temp\\tmpj4ag2_a9\\lib\\program.js:15442:22)",
-              "Immediate._onImmediate (C:\\Users\\bhunu\\AppData\\Local\\Temp\\tmpj4ag2_a9\\lib\\program.js:15443:45)",
+              "Annotations.addMessage (C:\\Users\\bhunu\\AppData\\Local\\Temp\\jsii-kernel-83swnQ\\node_modules\\aws-cdk-lib\\core\\lib\\annotations.js:1:2066)",
+              "Annotations.addWarningV2 (C:\\Users\\bhunu\\AppData\\Local\\Temp\\jsii-kernel-83swnQ\\node_modules\\aws-cdk-lib\\core\\lib\\annotations.js:1:984)",
+              "new Pipeline2 (C:\\Users\\bhunu\\AppData\\Local\\Temp\\jsii-kernel-83swnQ\\node_modules\\aws-cdk-lib\\aws-codepipeline\\lib\\pipeline.js:1:11800)",
+              "new Pipeline2 (C:\\Users\\bhunu\\AppData\\Local\\Temp\\jsii-kernel-83swnQ\\node_modules\\aws-cdk-lib\\core\\lib\\prop-injectable.js:1:681)",
+              "Kernel._Kernel_create (C:\\Users\\bhunu\\AppData\\Local\\Temp\\tmpe17m2_d_\\lib\\program.js:549:25)",
+              "Kernel.create (C:\\Users\\bhunu\\AppData\\Local\\Temp\\tmpe17m2_d_\\lib\\program.js:219:93)",
+              "KernelHost.processRequest (C:\\Users\\bhunu\\AppData\\Local\\Temp\\tmpe17m2_d_\\lib\\program.js:15482:36)",
+              "KernelHost.run (C:\\Users\\bhunu\\AppData\\Local\\Temp\\tmpe17m2_d_\\lib\\program.js:15442:22)",
+              "Immediate._onImmediate (C:\\Users\\bhunu\\AppData\\Local\\Temp\\tmpe17m2_d_\\lib\\program.js:15443:45)",
               "process.processImmediate (node:internal/timers:505:21)"
             ]
           }
