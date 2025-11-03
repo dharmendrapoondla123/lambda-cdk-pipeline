@@ -14,6 +14,7 @@ phases:
       - cdk synth LambdaStack -o cdk.out
 
 artifacts:
-  files:
-    - '**/*'
   base-directory: cdk.out
+  files:
+    - LambdaStack.template.json        # ✅ Required for CloudFormation deploy
+    - assets/**/*                      # ✅ Includes Lambda packaged zip file
