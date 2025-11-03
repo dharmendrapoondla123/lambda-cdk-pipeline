@@ -1,0 +1,1123 @@
+{
+ "Resources": {
+  "ArtifactBucket7410C9EF": {
+   "Type": "AWS::S3::Bucket",
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/ArtifactBucket/Resource"
+   }
+  },
+  "SynthProjectRole90E31009": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "codebuild.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/SynthProject/Role/Resource"
+   }
+  },
+  "SynthProjectRoleDefaultPolicy9D5AECCA": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":logs:",
+           {
+            "Ref": "AWS::Region"
+           },
+           ":",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":log-group:/aws/codebuild/",
+           {
+            "Ref": "SynthProject50AA6AE7"
+           }
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":logs:",
+           {
+            "Ref": "AWS::Region"
+           },
+           ":",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":log-group:/aws/codebuild/",
+           {
+            "Ref": "SynthProject50AA6AE7"
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "codebuild:CreateReportGroup",
+        "codebuild:CreateReport",
+        "codebuild:UpdateReport",
+        "codebuild:BatchPutTestCases",
+        "codebuild:BatchPutCodeCoverages"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":codebuild:",
+          {
+           "Ref": "AWS::Region"
+          },
+          ":",
+          {
+           "Ref": "AWS::AccountId"
+          },
+          ":report-group/",
+          {
+           "Ref": "SynthProject50AA6AE7"
+          },
+          "-*"
+         ]
+        ]
+       }
+      },
+      {
+       "Action": [
+        "s3:*",
+        "sts:AssumeRole",
+        "cloudformation:DescribeStacks",
+        "cloudformation:ListStacks"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:DeleteObject*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging",
+        "s3:Abort*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ArtifactBucket7410C9EF",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ArtifactBucket7410C9EF",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "SynthProjectRoleDefaultPolicy9D5AECCA",
+    "Roles": [
+     {
+      "Ref": "SynthProjectRole90E31009"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/SynthProject/Role/DefaultPolicy/Resource"
+   }
+  },
+  "SynthProject50AA6AE7": {
+   "Type": "AWS::CodeBuild::Project",
+   "Properties": {
+    "Artifacts": {
+     "Type": "CODEPIPELINE"
+    },
+    "Cache": {
+     "Type": "NO_CACHE"
+    },
+    "EncryptionKey": "alias/aws/s3",
+    "Environment": {
+     "ComputeType": "BUILD_GENERAL1_SMALL",
+     "Image": "aws/codebuild/standard:6.0",
+     "ImagePullCredentialsType": "CODEBUILD",
+     "PrivilegedMode": false,
+     "Type": "LINUX_CONTAINER"
+    },
+    "ServiceRole": {
+     "Fn::GetAtt": [
+      "SynthProjectRole90E31009",
+      "Arn"
+     ]
+    },
+    "Source": {
+     "BuildSpec": "buildspec.yml",
+     "Type": "CODEPIPELINE"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/SynthProject/Resource"
+   }
+  },
+  "CICDPipelineRole9708FA17": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "codepipeline.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/CICDPipeline/Role/Resource"
+   }
+  },
+  "CICDPipelineRoleDefaultPolicy94F714C1": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:DeleteObject*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging",
+        "s3:Abort*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ArtifactBucket7410C9EF",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ArtifactBucket7410C9EF",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "CICDPipelineSourceGitHubSourceCodePipelineActionRole21B81C00",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "CICDPipelineBuildCDKBuildCodePipelineActionRoleF7C2422B",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "CICDPipelineDeployCFNDeployCodePipelineActionRole8E85B658",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CICDPipelineRoleDefaultPolicy94F714C1",
+    "Roles": [
+     {
+      "Ref": "CICDPipelineRole9708FA17"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/CICDPipeline/Role/DefaultPolicy/Resource"
+   }
+  },
+  "CICDPipelineCFBBD95C": {
+   "Type": "AWS::CodePipeline::Pipeline",
+   "Properties": {
+    "ArtifactStore": {
+     "Location": {
+      "Ref": "ArtifactBucket7410C9EF"
+     },
+     "Type": "S3"
+    },
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "CICDPipelineRole9708FA17",
+      "Arn"
+     ]
+    },
+    "Stages": [
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Source",
+         "Owner": "AWS",
+         "Provider": "CodeStarSourceConnection",
+         "Version": "1"
+        },
+        "Configuration": {
+         "ConnectionArn": "arn:aws:codeconnections:ap-south-1:347156581188:connection/3712b2a1-b005-4a2f-9ff2-5db33267c2af",
+         "FullRepositoryId": "dharmendrapoondla123/lambda-cdk-pipline",
+         "BranchName": "main"
+        },
+        "Name": "GitHub_Source",
+        "OutputArtifacts": [
+         {
+          "Name": "SourceOutput"
+         }
+        ],
+        "RoleArn": {
+         "Fn::GetAtt": [
+          "CICDPipelineSourceGitHubSourceCodePipelineActionRole21B81C00",
+          "Arn"
+         ]
+        },
+        "RunOrder": 1
+       }
+      ],
+      "Name": "Source"
+     },
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Build",
+         "Owner": "AWS",
+         "Provider": "CodeBuild",
+         "Version": "1"
+        },
+        "Configuration": {
+         "ProjectName": {
+          "Ref": "SynthProject50AA6AE7"
+         }
+        },
+        "InputArtifacts": [
+         {
+          "Name": "SourceOutput"
+         }
+        ],
+        "Name": "CDK_Build",
+        "OutputArtifacts": [
+         {
+          "Name": "BuildOutput"
+         }
+        ],
+        "RoleArn": {
+         "Fn::GetAtt": [
+          "CICDPipelineBuildCDKBuildCodePipelineActionRoleF7C2422B",
+          "Arn"
+         ]
+        },
+        "RunOrder": 1
+       }
+      ],
+      "Name": "Build"
+     },
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Deploy",
+         "Owner": "AWS",
+         "Provider": "CloudFormation",
+         "Version": "1"
+        },
+        "Configuration": {
+         "StackName": "LambdaStack",
+         "Capabilities": "CAPABILITY_NAMED_IAM",
+         "RoleArn": {
+          "Fn::GetAtt": [
+           "CICDPipelineDeployCFNDeployRole33F9C261",
+           "Arn"
+          ]
+         },
+         "ActionMode": "CREATE_UPDATE",
+         "TemplatePath": "BuildOutput::LambdaStack.template.json"
+        },
+        "InputArtifacts": [
+         {
+          "Name": "BuildOutput"
+         }
+        ],
+        "Name": "CFN_Deploy",
+        "RoleArn": {
+         "Fn::GetAtt": [
+          "CICDPipelineDeployCFNDeployCodePipelineActionRole8E85B658",
+          "Arn"
+         ]
+        },
+        "RunOrder": 1
+       }
+      ],
+      "Name": "Deploy"
+     }
+    ]
+   },
+   "DependsOn": [
+    "CICDPipelineRoleDefaultPolicy94F714C1",
+    "CICDPipelineRole9708FA17"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/CICDPipeline/Resource"
+   }
+  },
+  "CICDPipelineSourceGitHubSourceCodePipelineActionRole21B81C00": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CICDPipelineRole9708FA17",
+          "Arn"
+         ]
+        }
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/CICDPipeline/Source/GitHub_Source/CodePipelineActionRole/Resource"
+   }
+  },
+  "CICDPipelineSourceGitHubSourceCodePipelineActionRoleDefaultPolicy5D29B81E": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "codestar-connections:UseConnection",
+       "Effect": "Allow",
+       "Resource": "arn:aws:codeconnections:ap-south-1:347156581188:connection/3712b2a1-b005-4a2f-9ff2-5db33267c2af"
+      },
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:DeleteObject*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging",
+        "s3:Abort*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ArtifactBucket7410C9EF",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ArtifactBucket7410C9EF",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:PutObjectAcl",
+        "s3:PutObjectVersionAcl"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "ArtifactBucket7410C9EF",
+            "Arn"
+           ]
+          },
+          "/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CICDPipelineSourceGitHubSourceCodePipelineActionRoleDefaultPolicy5D29B81E",
+    "Roles": [
+     {
+      "Ref": "CICDPipelineSourceGitHubSourceCodePipelineActionRole21B81C00"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/CICDPipeline/Source/GitHub_Source/CodePipelineActionRole/DefaultPolicy/Resource"
+   }
+  },
+  "CICDPipelineBuildCDKBuildCodePipelineActionRoleF7C2422B": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CICDPipelineRole9708FA17",
+          "Arn"
+         ]
+        }
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/CICDPipeline/Build/CDK_Build/CodePipelineActionRole/Resource"
+   }
+  },
+  "CICDPipelineBuildCDKBuildCodePipelineActionRoleDefaultPolicy6CE31984": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "codebuild:BatchGetBuilds",
+        "codebuild:StartBuild",
+        "codebuild:StopBuild"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "SynthProject50AA6AE7",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CICDPipelineBuildCDKBuildCodePipelineActionRoleDefaultPolicy6CE31984",
+    "Roles": [
+     {
+      "Ref": "CICDPipelineBuildCDKBuildCodePipelineActionRoleF7C2422B"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/CICDPipeline/Build/CDK_Build/CodePipelineActionRole/DefaultPolicy/Resource"
+   }
+  },
+  "CICDPipelineDeployCFNDeployCodePipelineActionRole8E85B658": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CICDPipelineRole9708FA17",
+          "Arn"
+         ]
+        }
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/CICDPipeline/Deploy/CFN_Deploy/CodePipelineActionRole/Resource"
+   }
+  },
+  "CICDPipelineDeployCFNDeployCodePipelineActionRoleDefaultPolicy4336867B": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "iam:PassRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "CICDPipelineDeployCFNDeployRole33F9C261",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ArtifactBucket7410C9EF",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ArtifactBucket7410C9EF",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "cloudformation:CreateStack",
+        "cloudformation:DescribeStack*",
+        "cloudformation:GetStackPolicy",
+        "cloudformation:GetTemplate*",
+        "cloudformation:SetStackPolicy",
+        "cloudformation:UpdateStack",
+        "cloudformation:ValidateTemplate"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":cloudformation:",
+          {
+           "Ref": "AWS::Region"
+          },
+          ":",
+          {
+           "Ref": "AWS::AccountId"
+          },
+          ":stack/LambdaStack/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CICDPipelineDeployCFNDeployCodePipelineActionRoleDefaultPolicy4336867B",
+    "Roles": [
+     {
+      "Ref": "CICDPipelineDeployCFNDeployCodePipelineActionRole8E85B658"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/CICDPipeline/Deploy/CFN_Deploy/CodePipelineActionRole/DefaultPolicy/Resource"
+   }
+  },
+  "CICDPipelineDeployCFNDeployRole33F9C261": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "cloudformation.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/CICDPipeline/Deploy/CFN_Deploy/Role/Resource"
+   }
+  },
+  "CICDPipelineDeployCFNDeployRoleDefaultPolicyAB7C0514": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ArtifactBucket7410C9EF",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ArtifactBucket7410C9EF",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "*",
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CICDPipelineDeployCFNDeployRoleDefaultPolicyAB7C0514",
+    "Roles": [
+     {
+      "Ref": "CICDPipelineDeployCFNDeployRole33F9C261"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/CICDPipeline/Deploy/CFN_Deploy/Role/DefaultPolicy/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/0WMWwqDMBBF1+J/nFbtCtoNBLuAEscpHY2J5IFIyN5Lo9Cve7gcTgtt20BTqc3XOM615gHSMyichdr8K/kO0j3iTEE83uagLNCONETWIyTJK2k2JJ2dCIt1YhasFki91fR7y0qrGfciFTpS69n414pxcs6iJ2+jQ8pC7uFjzaWD5gbXavLMtYsm8ELQH/sFxKvVVdIAAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/CDKMetadata/Default"
+   },
+   "Condition": "CDKMetadataAvailable"
+  }
+ },
+ "Conditions": {
+  "CDKMetadataAvailable": {
+   "Fn::Or": [
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "af-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-3"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-4"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-northwest-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-2"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "il-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "sa-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-west-1"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "AWS::Region"
+      },
+      "us-west-2"
+     ]
+    }
+   ]
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
