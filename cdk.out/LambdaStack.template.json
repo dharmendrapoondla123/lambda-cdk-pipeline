@@ -41,7 +41,7 @@
      "S3Bucket": {
       "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
      },
-     "S3Key": "1fd6afda462863ef6747bf7603f17409979e676e927ac1409156c41eb1b6adb1.zip"
+     "S3Key": "da532952bc9da33865735dbadbfacf5c502c4740a0a6830ecf8d1e2e02fd8ef8.zip"
     },
     "FunctionName": "sample-cdk-lambda",
     "Handler": "handler.handler",
@@ -58,7 +58,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "LambdaStack/sample-cdk-lambda/Resource",
-    "aws:asset:path": "asset.1fd6afda462863ef6747bf7603f17409979e676e927ac1409156c41eb1b6adb1",
+    "aws:asset:path": "asset.da532952bc9da33865735dbadbfacf5c502c4740a0a6830ecf8d1e2e02fd8ef8",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }
