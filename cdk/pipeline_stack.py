@@ -38,7 +38,7 @@ class PipelineStack(Stack):
         source_action = cpactions.GitHubSourceAction(
             action_name="GitHub_Source",
             owner="dharmendrapoondla123",
-            repo="lambda-cdk-pipeline",
+            repo="dharmendrapoondla123/lambda-cdk-pipeline",
             branch="main",
             oauth_token=SecretValue.secrets_manager("github-token"),
             output=source_output,
