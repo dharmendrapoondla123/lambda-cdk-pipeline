@@ -53,7 +53,6 @@ class PipelineStack(Stack):
         branch="main",
         connection_arn="arn:aws:codeconnections:ap-south-1:347156581188:connection/3712b2a1-b005-4a2f-9ff2-5db33267c2af",
         output=source_output,
-        trigger=cpactions.CodeStarConnectionsSourceActionTrigger.WEBHOOK  # ✅ optional but useful
         )
 
 
