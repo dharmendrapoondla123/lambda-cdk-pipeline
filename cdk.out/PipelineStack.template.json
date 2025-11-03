@@ -3,163 +3,15 @@
   "ArtifactBucket7410C9EF": {
    "Type": "AWS::S3::Bucket",
    "Properties": {
-    "Tags": [
-     {
-      "Key": "aws-cdk:auto-delete-objects",
-      "Value": "true"
-     }
-    ],
+    "BucketName": "my-cdk-artifact-bucket",
     "VersioningConfiguration": {
      "Status": "Enabled"
     }
    },
-   "UpdateReplacePolicy": "Delete",
-   "DeletionPolicy": "Delete",
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
    "Metadata": {
     "aws:cdk:path": "PipelineStack/ArtifactBucket/Resource"
-   }
-  },
-  "ArtifactBucketPolicy4B4B7752": {
-   "Type": "AWS::S3::BucketPolicy",
-   "Properties": {
-    "Bucket": {
-     "Ref": "ArtifactBucket7410C9EF"
-    },
-    "PolicyDocument": {
-     "Statement": [
-      {
-       "Action": [
-        "s3:PutBucketPolicy",
-        "s3:GetBucket*",
-        "s3:List*",
-        "s3:DeleteObject*"
-       ],
-       "Effect": "Allow",
-       "Principal": {
-        "AWS": {
-         "Fn::GetAtt": [
-          "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
-          "Arn"
-         ]
-        }
-       },
-       "Resource": [
-        {
-         "Fn::GetAtt": [
-          "ArtifactBucket7410C9EF",
-          "Arn"
-         ]
-        },
-        {
-         "Fn::Join": [
-          "",
-          [
-           {
-            "Fn::GetAtt": [
-             "ArtifactBucket7410C9EF",
-             "Arn"
-            ]
-           },
-           "/*"
-          ]
-         ]
-        }
-       ]
-      }
-     ],
-     "Version": "2012-10-17"
-    }
-   },
-   "Metadata": {
-    "aws:cdk:path": "PipelineStack/ArtifactBucket/Policy/Resource"
-   }
-  },
-  "ArtifactBucketAutoDeleteObjectsCustomResource0BB47FD6": {
-   "Type": "Custom::S3AutoDeleteObjects",
-   "Properties": {
-    "ServiceToken": {
-     "Fn::GetAtt": [
-      "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
-      "Arn"
-     ]
-    },
-    "BucketName": {
-     "Ref": "ArtifactBucket7410C9EF"
-    }
-   },
-   "DependsOn": [
-    "ArtifactBucketPolicy4B4B7752"
-   ],
-   "UpdateReplacePolicy": "Delete",
-   "DeletionPolicy": "Delete",
-   "Metadata": {
-    "aws:cdk:path": "PipelineStack/ArtifactBucket/AutoDeleteObjectsCustomResource/Default"
-   }
-  },
-  "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092": {
-   "Type": "AWS::IAM::Role",
-   "Properties": {
-    "AssumeRolePolicyDocument": {
-     "Version": "2012-10-17",
-     "Statement": [
-      {
-       "Action": "sts:AssumeRole",
-       "Effect": "Allow",
-       "Principal": {
-        "Service": "lambda.amazonaws.com"
-       }
-      }
-     ]
-    },
-    "ManagedPolicyArns": [
-     {
-      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-     }
-    ]
-   },
-   "Metadata": {
-    "aws:cdk:path": "PipelineStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role"
-   }
-  },
-  "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F": {
-   "Type": "AWS::Lambda::Function",
-   "Properties": {
-    "Code": {
-     "S3Bucket": {
-      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
-     },
-     "S3Key": "faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6.zip"
-    },
-    "Timeout": 900,
-    "MemorySize": 128,
-    "Handler": "index.handler",
-    "Role": {
-     "Fn::GetAtt": [
-      "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
-      "Arn"
-     ]
-    },
-    "Runtime": "nodejs22.x",
-    "Description": {
-     "Fn::Join": [
-      "",
-      [
-       "Lambda function for auto-deleting objects in ",
-       {
-        "Ref": "ArtifactBucket7410C9EF"
-       },
-       " S3 bucket."
-      ]
-     ]
-    }
-   },
-   "DependsOn": [
-    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
-   ],
-   "Metadata": {
-    "aws:cdk:path": "PipelineStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
-    "aws:asset:path": "asset.faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6",
-    "aws:asset:property": "Code"
    }
   },
   "SynthProjectRole90E31009": {
@@ -282,8 +134,7 @@
        "Action": [
         "s3:*",
         "sts:AssumeRole",
-        "cloudformation:DescribeStacks",
-        "cloudformation:ListStacks"
+        "cloudformation:*"
        ],
        "Effect": "Allow",
        "Resource": "*"
@@ -486,6 +337,7 @@
      },
      "Type": "S3"
     },
+    "PipelineType": "V2",
     "RoleArn": {
      "Fn::GetAtt": [
       "CICDPipelineRole9708FA17",
@@ -966,7 +818,7 @@
   "CDKMetadata": {
    "Type": "AWS::CDK::Metadata",
    "Properties": {
-    "Analytics": "v2:deflate64:H4sIAAAAAAAA/1WMUQ7CIBBEz+I/XW31AuoFSD2AQbrqWgoNCxpDuLuxrVa/5u3s5FVQVSWUC/XgQjdtYegE6RCUboV68DHxGtIu6haD2J/tRGNIZ0g/53q8s9CuwVMk00CS1KMhi9K7G+pBMWEWpDpItTP4boechb+qfnLMtmExcc5iHzm4rkZ20evR9uW/l/TuTg36nWIUW2YMh6AuZC/is8hCPsPV2eUayg2sFjcmKny0gTqEeswXfIyo3DIBAAA="
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/0WMWwqDMBBF1+J/nFbtCtoNBLuAEscpHY2J5IFIyN5Lo9Cve7gcTgtt20BTqc3XOM615gHSMyichdr8K/kO0j3iTEE83uagLNCONETWIyTJK2k2JJ2dCIt1YhasFki91fR7y0qrGfciFTpS69n414pxcs6iJ2+jQ8pC7uFjzaWD5gbXavLMtYsm8ELQH/sFxKvVVdIAAAA="
    },
    "Metadata": {
     "aws:cdk:path": "PipelineStack/CDKMetadata/Default"
