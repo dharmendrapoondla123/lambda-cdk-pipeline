@@ -284,6 +284,16 @@
        "Effect": "Allow",
        "Resource": {
         "Fn::GetAtt": [
+         "CICDPipelineSourceGitHubSourceCodePipelineActionRole21B81C00",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
          "CICDPipelineBuildCDKBuildCodePipelineActionRoleF7C2422B",
          "Arn"
         ]
@@ -334,16 +344,14 @@
        {
         "ActionTypeId": {
          "Category": "Source",
-         "Owner": "ThirdParty",
-         "Provider": "GitHub",
+         "Owner": "AWS",
+         "Provider": "CodeStarSourceConnection",
          "Version": "1"
         },
         "Configuration": {
-         "Owner": "dharmendrapoondla123",
-         "Repo": "dharmendrapoondla123/lambda-cdk-pipeline",
-         "Branch": "main",
-         "OAuthToken": "{{resolve:secretsmanager:github-token:SecretString:::}}",
-         "PollForSourceChanges": false
+         "ConnectionArn": "arn:aws:codeconnections:ap-south-1:347156581188:connection/3712b2a1-b005-4a2f-9ff2-5db33267c2af",
+         "FullRepositoryId": "dharmendrapoondla123/lambda-cdk-pipeline",
+         "BranchName": "main"
         },
         "Name": "GitHub_Source",
         "OutputArtifacts": [
@@ -351,6 +359,12 @@
           "Name": "SourceOutput"
          }
         ],
+        "RoleArn": {
+         "Fn::GetAtt": [
+          "CICDPipelineSourceGitHubSourceCodePipelineActionRole21B81C00",
+          "Arn"
+         ]
+        },
         "RunOrder": 1
        }
       ],
@@ -440,28 +454,111 @@
     "aws:cdk:path": "PipelineStack/CICDPipeline/Resource"
    }
   },
-  "CICDPipelineSourceGitHubSourceWebhookResource2C095E73": {
-   "Type": "AWS::CodePipeline::Webhook",
+  "CICDPipelineSourceGitHubSourceCodePipelineActionRole21B81C00": {
+   "Type": "AWS::IAM::Role",
    "Properties": {
-    "Authentication": "GITHUB_HMAC",
-    "AuthenticationConfiguration": {
-     "SecretToken": "{{resolve:secretsmanager:github-token:SecretString:::}}"
-    },
-    "Filters": [
-     {
-      "JsonPath": "$.ref",
-      "MatchEquals": "refs/heads/{Branch}"
-     }
-    ],
-    "RegisterWithThirdParty": true,
-    "TargetAction": "GitHub_Source",
-    "TargetPipeline": {
-     "Ref": "CICDPipelineCFBBD95C"
-    },
-    "TargetPipelineVersion": 1
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CICDPipelineRole9708FA17",
+          "Arn"
+         ]
+        }
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
    },
    "Metadata": {
-    "aws:cdk:path": "PipelineStack/CICDPipeline/Source/GitHub_Source/WebhookResource"
+    "aws:cdk:path": "PipelineStack/CICDPipeline/Source/GitHub_Source/CodePipelineActionRole/Resource"
+   }
+  },
+  "CICDPipelineSourceGitHubSourceCodePipelineActionRoleDefaultPolicy5D29B81E": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "codestar-connections:UseConnection",
+       "Effect": "Allow",
+       "Resource": "arn:aws:codeconnections:ap-south-1:347156581188:connection/3712b2a1-b005-4a2f-9ff2-5db33267c2af"
+      },
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:DeleteObject*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging",
+        "s3:Abort*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ArtifactBucket7410C9EF",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ArtifactBucket7410C9EF",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:PutObjectAcl",
+        "s3:PutObjectVersionAcl"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "ArtifactBucket7410C9EF",
+            "Arn"
+           ]
+          },
+          "/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CICDPipelineSourceGitHubSourceCodePipelineActionRoleDefaultPolicy5D29B81E",
+    "Roles": [
+     {
+      "Ref": "CICDPipelineSourceGitHubSourceCodePipelineActionRole21B81C00"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/CICDPipeline/Source/GitHub_Source/CodePipelineActionRole/DefaultPolicy/Resource"
    }
   },
   "CICDPipelineBuildCDKBuildCodePipelineActionRoleF7C2422B": {
@@ -715,7 +812,7 @@
   "CDKMetadata": {
    "Type": "AWS::CDK::Metadata",
    "Properties": {
-    "Analytics": "v2:deflate64:H4sIAAAAAAAA/02MQQ6CMBBFz8K+jAKeQC/Q4MKlKWUMQytDaBtCmt7dWEh09V9+Xl4NdV1BVajVlbo3paUO4t0rbYRa3TO6BuI1aINe3F7TTklo7rELZHuIkma0NKFceESdrQOTIPWG2LLF75tXsiW9ZSnTnpqPxq+WjT9+YDcwm5REi47DojEJufmBp1MD1QXOxeiIyiVMnt4I7b4fhKf+bN0AAAA="
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/0WMWwqDMBBF1+J/nFbtCtoNBLuAEscpHY2J5IFIyN5Lo9Cve7gcTgtt20BTqc3XOM615gHSMyichdr8K/kO0j3iTEE83uagLNCONETWIyTJK2k2JJ2dCIt1YhasFki91fR7y0qrGfciFTpS69n414pxcs6iJ2+jQ8pC7uFjzaWD5gbXavLMtYsm8ELQH/sFxKvVVdIAAAA="
    },
    "Metadata": {
     "aws:cdk:path": "PipelineStack/CDKMetadata/Default"
