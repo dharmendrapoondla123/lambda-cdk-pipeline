@@ -18,7 +18,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/4eda5892b93130dcbaa74322d9c1b00bf13037ff6248efcba373c81d5f34c8de.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/10cb0b303756de8a9d95018d0c76b84eca2f25e95f7a608c7078be477ce758af.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -90,7 +90,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/7b6cca5e79c8f3df6e5251b817b5a675fe679e7804e7001ab0543de0b6e1cd78.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/36889f46ebfe109dcbbc4f6a633e918995d8bd3516b29079de53dd303194c0ae.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -110,6 +110,36 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "ArtifactBucket7410C9EF"
+          }
+        ],
+        "/PipelineStack/ArtifactBucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ArtifactBucketPolicy4B4B7752"
+          }
+        ],
+        "/PipelineStack/ArtifactBucket/AutoDeleteObjectsCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ArtifactBucketAutoDeleteObjectsCustomResource0BB47FD6"
+          }
+        ],
+        "/PipelineStack/Custom::S3AutoDeleteObjectsCustomResourceProvider": [
+          {
+            "type": "aws:cdk:is-custom-resource-handler-customResourceProvider",
+            "data": true
+          }
+        ],
+        "/PipelineStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+          }
+        ],
+        "/PipelineStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F"
           }
         ],
         "/PipelineStack/SynthProject/Role/Resource": [
@@ -135,15 +165,15 @@
             "type": "aws:cdk:warning",
             "data": "V1 pipeline type is implicitly selected when `pipelineType` is not set. If you want to use V2 type, set `PipelineType.V2`. [ack: @aws-cdk/aws-codepipeline:unspecifiedPipelineType]",
             "trace": [
-              "Annotations.addMessage (C:\\Users\\bhunu\\AppData\\Local\\Temp\\jsii-kernel-QjpGqP\\node_modules\\aws-cdk-lib\\core\\lib\\annotations.js:1:2066)",
-              "Annotations.addWarningV2 (C:\\Users\\bhunu\\AppData\\Local\\Temp\\jsii-kernel-QjpGqP\\node_modules\\aws-cdk-lib\\core\\lib\\annotations.js:1:984)",
-              "new Pipeline2 (C:\\Users\\bhunu\\AppData\\Local\\Temp\\jsii-kernel-QjpGqP\\node_modules\\aws-cdk-lib\\aws-codepipeline\\lib\\pipeline.js:1:11800)",
-              "new Pipeline2 (C:\\Users\\bhunu\\AppData\\Local\\Temp\\jsii-kernel-QjpGqP\\node_modules\\aws-cdk-lib\\core\\lib\\prop-injectable.js:1:681)",
-              "Kernel._Kernel_create (C:\\Users\\bhunu\\AppData\\Local\\Temp\\tmpbew2r8wj\\lib\\program.js:549:25)",
-              "Kernel.create (C:\\Users\\bhunu\\AppData\\Local\\Temp\\tmpbew2r8wj\\lib\\program.js:219:93)",
-              "KernelHost.processRequest (C:\\Users\\bhunu\\AppData\\Local\\Temp\\tmpbew2r8wj\\lib\\program.js:15482:36)",
-              "KernelHost.run (C:\\Users\\bhunu\\AppData\\Local\\Temp\\tmpbew2r8wj\\lib\\program.js:15442:22)",
-              "Immediate._onImmediate (C:\\Users\\bhunu\\AppData\\Local\\Temp\\tmpbew2r8wj\\lib\\program.js:15443:45)",
+              "Annotations.addMessage (C:\\Users\\bhunu\\AppData\\Local\\Temp\\jsii-kernel-S0NXlC\\node_modules\\aws-cdk-lib\\core\\lib\\annotations.js:1:2066)",
+              "Annotations.addWarningV2 (C:\\Users\\bhunu\\AppData\\Local\\Temp\\jsii-kernel-S0NXlC\\node_modules\\aws-cdk-lib\\core\\lib\\annotations.js:1:984)",
+              "new Pipeline2 (C:\\Users\\bhunu\\AppData\\Local\\Temp\\jsii-kernel-S0NXlC\\node_modules\\aws-cdk-lib\\aws-codepipeline\\lib\\pipeline.js:1:11800)",
+              "new Pipeline2 (C:\\Users\\bhunu\\AppData\\Local\\Temp\\jsii-kernel-S0NXlC\\node_modules\\aws-cdk-lib\\core\\lib\\prop-injectable.js:1:681)",
+              "Kernel._Kernel_create (C:\\Users\\bhunu\\AppData\\Local\\Temp\\tmpppt7j4ar\\lib\\program.js:549:25)",
+              "Kernel.create (C:\\Users\\bhunu\\AppData\\Local\\Temp\\tmpppt7j4ar\\lib\\program.js:219:93)",
+              "KernelHost.processRequest (C:\\Users\\bhunu\\AppData\\Local\\Temp\\tmpppt7j4ar\\lib\\program.js:15482:36)",
+              "KernelHost.run (C:\\Users\\bhunu\\AppData\\Local\\Temp\\tmpppt7j4ar\\lib\\program.js:15442:22)",
+              "Immediate._onImmediate (C:\\Users\\bhunu\\AppData\\Local\\Temp\\tmpppt7j4ar\\lib\\program.js:15443:45)",
               "process.processImmediate (node:internal/timers:505:21)"
             ]
           }

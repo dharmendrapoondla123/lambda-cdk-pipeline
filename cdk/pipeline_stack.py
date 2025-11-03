@@ -1,5 +1,6 @@
 from aws_cdk import (
     Stack,
+    RemovalPolicy,                      # ✅ Add this
     aws_codepipeline as codepipeline,
     aws_codepipeline_actions as cpactions,
     aws_codebuild as codebuild,
@@ -13,14 +14,20 @@ class PipelineStack(Stack):
     def __init__(self, scope: Construct, id: str, lambda_stack_name: str, **kwargs):
         super().__init__(scope, id, **kwargs)
 
-        artifact_bucket = s3.Bucket(self, "ArtifactBucket")
+        artifact_bucket = s3.Bucket(
+            self,
+            "ArtifactBucket",
+            versioned=True,
+            removal_policy=RemovalPolicy.DESTROY,
+            auto_delete_objects=True,
+        )
 
         source_output = codepipeline.Artifact("SourceOutput")
         build_output = codepipeline.Artifact("BuildOutput")
 
         # CodeBuild project that will synth the CDK app and output CloudFormation template
         build_project = codebuild.PipelineProject(self, "SynthProject",
-            environment=codebuild.BuildEnvironment(build_image=codebuild.LinuxBuildImage.STANDARD_6_0),
+            environment=codebuild.BuildEnvironment(build_image=codebuild.LinuxBuildImage.STANDARD_7_0),
             build_spec=codebuild.BuildSpec.from_source_filename("buildspec.yml")
         )
 
